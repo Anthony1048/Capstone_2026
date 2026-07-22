@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Security Auditor | Control Center</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body class="launcher-body">
+
+<div class="launcher-container">
+    <header>
+        <h1>Security Auditor</h1>
+        <p class="subtitle">Windows Vulnerability & Hardening Tool</p>
+    </header>
+
+    <div class="action-box">
+        <p>Ready to perform a local system audit?</p>
+
+        <form method="post" action="/run-scan">
+            <button type="submit" class="btn btn-primary">Run New Scan</button>
+        </form>
+
+        <form method="post" action="/exit">
+            <button type="submit" class="btn btn-outline">Exit System</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 | Capstone Project Security Suite</p>
+    </footer>
+</div>
+
+</body>
+</html>
