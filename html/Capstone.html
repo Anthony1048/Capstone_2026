@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class = "report-container">
+    <header>
+        <h1>Security Audit Report</h1>
+        <p class = "subtitle">System Vulnerability Report</p>
+    </header>
+    <section class = "summary-cards">
+        <div class = "card-info">
+            <h3>System Information</h3>
+            {{SYSTEM_INFO}}
+        </div>
+        <div class = "card-Warning">
+            <h3>Scan Status</h3>
+            {{SCAN_STATUS}} </div>
+
+    </section>
+    <section class = "findings">
+        <h2>Security Feature Status</h2>
+        <div class = "output-window">
+            {{STATUSES}}
+        </div>
+    </section>
+    <section class = "findings">
+        <h2>Detailed Findings</h2>
+        <div class = "output-window">
+            {{FINDINGS}}
+        </div>
+    </section>
+    <footer>
+        <p>&copy; 2026 | Project week 5 Integration </p>
+    </footer>
+    </div>
+</body>
+</html>
