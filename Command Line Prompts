@@ -1,0 +1,53 @@
+Change firewall on windows 11 via cmd. ✅
+1.	Run as administrator
+2.	netsh advfirewall set allprofiles state off
+3.	netsh advfirewall set allprofiles state on
+
+*****Change Bitlocker status on windows 11 via cmd 
+1.	manage-bde –status
+2.	manage-bde -off C:
+3.	manage-bde -on C:
+
+Change SMB1 status via powershell ✅
+1.	Get-SmbServerConfiguration | Select EnabledSMB1Protocol
+2.	Enable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol - NoRestart
+3.	Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -NoRestart
+
+Change RDP status on windows 11 via cmd ✅
+1.	reg add “HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f       this is to enable 
+2.	reg add “HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 1 /f       this is to disable
+
+Change Microsoft defender on windows 11 vis powershell ✅
+Turn off tamper protection 
+1.	Set-MpPreference -DisableRealtimeMonitoring $false
+2.	Set-MpPreference -DisableRealtimeMonitoring $true
+
+********Change bitlocker status vis powershell
+1.	Enable-BitLocker -MountPoint "C:" -EncryptionMethod XtsAes256 -UsedSpaceOnly
+2.	Disable-BitLocker -MountPoint "C:"
+
+Change UAC status via powershell. ✅
+1.	Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -Value 0
+2.	Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -Value 1
+
+
+Change Guest Account Status via powershell✅
+1.	net user guest /active:no
+2.	net user guest /active:yes
+
+Local Admin Group Membership via powershell✅
+1.	Add-LocalGroupMember -Group "Administrators" -Member "USERNAME"
+2.	Remove-LocalGroupMember -Group "Administrators" -Member "USERNAME"
+3.	net user Administrator /active:no 
+4.	net user Administrator /active:yes
+
+
+What is Considered Secured?
+Firewall should be enabled 
+Microsoft Defender should be enabled
+SMBv1 should be disabled
+RDP should be disabled 
+BitLocker should be enabled 
+UAC should be disabled
+Guest account should be enabled 
+Admon accounts should have minimal access 
