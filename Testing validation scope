@@ -1,0 +1,591 @@
+Test Plan
+
+Project: Windows Vulnerability & Hardening Auditor
+Role: Validation & Case Study Team
+Application Type: Defensive Security Assessment Tool
+Technology Stack:
+
+C++ (Application logic & UI)
+
+Python (Security scanner & rules engine)
+
+PowerShell (Read-only system interrogation)
+
+HTML/CSS (Report generation)
+
+SQLite (Optional scan history storage)
+
+
+
+1. Purpose of the Test Plan
+
+  The purpose of this test plan is to define the strategy, scope, and methodology used to validate the correctness, reliability, and safety of the Windows Vulnerability & Hardening Auditor.
+
+  This test plan ensures that:
+
+  Security misconfigurations are detected accurately
+
+  Severity levels are assigned consistently
+
+  Integration between C++ and Python functions correctly
+
+  The system handles permission limitations gracefully
+
+  Reports are accurate, readable, and actionable
+
+  The tool operates ethically and non-invasively
+
+2. Test Scope
+  2.1 In-Scope Testing
+
+    Local Windows system scanning
+
+    Read-only interrogation of system security settings
+
+    C++ execution of Python scanner
+
+    JSON-based result exchange
+
+    UI display and filtering of findings
+
+    HTML report generation
+
+    Error handling and permission awareness
+
+  2.2 Out-of-Scope Testing
+
+    Vulnerability exploitation
+
+    Password cracking or brute-force attacks
+
+    Network scanning of external systems
+
+    Malware simulation
+
+    Any modification of system settings
+
+3. Test Environment
+
+  Operating System: Windows 10 / Windows 11
+
+  Execution Context:
+
+  Administrator account
+
+  Standard (non-admin) user account
+
+  Tools:
+
+    PowerShell (read-only commands)
+
+    Python runtime
+
+    C++ compiled application
+
+  Test Data:
+
+    Live system configuration
+
+    Controlled misconfiguration scenarios (where permitted)
+
+4. Test Strategy
+
+  Testing will be conducted using functional, integration, and negative testing approaches.
+
+  4.1 Functional Testing
+
+    Validates correct detection of security configurations and vulnerabilities.
+
+  4.2 Integration Testing
+
+    Validates communication and data handling between:
+
+    C++ application
+
+    Python scanner
+
+    PowerShell commands
+
+  4.3 Negative & Reliability Testing
+
+    Validates system behavior when:
+
+    Permissions are insufficient
+
+    Python execution fails
+
+    JSON output is malformed or incomplete
+
+5. Severity Validation Criteria
+
+Severity validation ensures findings are classified consistently and defensibly.
+
+Finding	Expected Severity
+Antivirus / Defender disabled	Critical
+Firewall disabled	Critical
+SMBv1 enabled	High
+BitLocker disabled	High
+Guest account enabled	High
+Remote Desktop enabled	Medium
+User Account Control disabled	Medium
+Informational system details	Low
+
+Severity validation confirms that scanner-assigned severity matches this matrix.
+
+6. Test Case Summary
+
+  A total of 10–15 test cases will be executed, covering the following categories:
+
+  6.1 Security Feature Detection Tests
+
+    Antivirus / Defender status
+
+    Firewall profiles (Domain, Private, Public)
+
+    SMBv1 enablement
+
+    BitLocker encryption status
+
+    Remote Desktop configuration
+
+    UAC status
+
+    Guest account status
+
+    Local administrator group membership
+
+  6.2 Integration & Reliability Tests
+
+    C++ initiates Python scanner successfully
+
+    JSON results parsed correctly by C++
+
+    Graceful handling of Python execution failure
+
+    Graceful handling of empty or malformed JSON
+
+    Scan execution without administrator privileges
+
+    Handling of PowerShell permission errors without crashing
+
+7. Test Case Template
+
+  Each test case follows this standardized format:
+
+  Test Case ID
+
+  Description
+
+  Preconditions
+
+  Test Steps
+
+  Expected Results
+
+  Pass / Fail
+
+  Notes
+
+  This ensures repeatability and clear documentation for final reporting.
+
+8. Scan Result Validation Template
+
+  Each executed scan will be documented using a standardized template containing:
+
+  System scenario description
+
+  Scan timestamp
+
+  Detected vulnerabilities
+
+  Severity count summary
+
+  C++ UI behavior (tables, filters, summaries)
+
+  Errors or warnings
+
+  HTML report accuracy and completeness
+
+9. Entry & Exit Criteria
+  9.1 Entry Criteria
+
+    C++ application can execute Python scanner
+
+    Python scanner produces JSON output
+
+    UI is capable of displaying scan results
+
+  9.2 Exit Criteria
+
+    All planned test cases executed
+
+    Test results documented
+
+    Case study outputs captured
+
+    No critical failures preventing scan completion
+
+10. Test Deliverables
+
+  Finalized test case document
+
+  Severity validation reference
+
+  Scan validation templates
+
+  Executed case study documentation
+
+  Test results summary
+
+  Case Studies for Class Discussion & Validation
+
+  These case studies are not hypothetical fluff — each one exists to prove the program runs correctly under real conditions.
+
+
+
+Case Study 1: Secure System Baseline
+Scenario Description
+A Windows system configured with strong security controls enabled.
+System Conditions
+Antivirus enabled and up to date
+Firewall enabled on all profiles
+BitLocker enabled
+SMBv1 disabled
+UAC enabled
+Guest account disabled
+RDP disabled
+
+Expected Results
+Few or no high/critical findings
+Mostly Low or Informational entries
+Accurate severity counts
+Clean HTML report generation
+
+Validation Purpose
+Confirms no false positives
+Demonstrates accuracy on well-hardened systems
+Builds trust in tool reliability
+
+
+Case Study 2: Common Security Misconfigurations
+Scenario Description
+A system with realistic misconfigurations often found on unmanaged machines.
+System Conditions
+Firewall disabled
+SMBv1 enabled
+BitLocker disabled
+Guest account enabled
+RDP enabled
+
+Expected Results
+Multiple Critical and High findings
+Severity matches validation matrix
+Clear remediation guidance provided
+Correct UI filtering by severity
+
+Validation Purpose
+Confirms detection accuracy
+Validates severity classification logic
+Demonstrates real-world usefulness
+
+
+Case Study 3: Non-Administrator Execution
+Scenario Description
+Scan executed under a standard user account.
+System Conditions
+Limited permissions
+Some PowerShell queries inaccessible
+
+Expected Results
+Scan completes without crashing
+Partial results displayed
+Permission-related warnings shown
+HTML report documents limited visibility
+
+Validation Purpose
+Confirms safe, ethical operation
+Validates graceful degradation
+Demonstrates respect for permission boundaries
+
+
+Case Study 4: Error Handling & Resilience
+Scenario Description
+Simulated failure scenarios.
+Conditions
+Python script fails to execute
+Python returns malformed or empty JSON
+
+Expected Results
+C++ application displays clear error messages
+No crashes or undefined behavior
+Scan failure documented cleanly
+
+Validation Purpose
+Validates robustness
+Demonstrates defensive programming
+Confirms professional error handling
+
+Case Study 5: Severity Classification Accuracy
+Scenario Description
+
+A controlled system where specific vulnerabilities are intentionally enabled to validate severity mapping.
+
+System Conditions
+
+Antivirus disabled
+Firewall enabled
+SMBv1 enabled
+BitLocker disabled
+Guest account disabled
+RDP enabled
+UAC enabled
+
+Expected Results
+
+Antivirus flagged as Critical
+SMBv1 and BitLocker flagged as High
+RDP flagged as Medium
+No severity misclassification
+Severity counts match validation matrix
+
+Validation Purpose
+
+Confirms consistency of severity assignments
+Validates alignment with documented severity criteria
+Ensures defensible reporting logic
+
+Case Study 6: Firewall Profile Granularity
+Scenario Description
+
+A system with inconsistent firewall configuration across profiles.
+
+System Conditions
+
+Firewall enabled on Domain profile
+Firewall disabled on Private and Public profiles
+All other controls properly configured
+
+Expected Results
+
+Critical findings for disabled firewall profiles
+Correct identification of affected profiles
+No false reporting on enabled profile
+Accurate severity summary
+
+Validation Purpose
+
+Validates per-profile firewall detection
+Confirms granular rule evaluation
+Prevents overgeneralized findings
+
+Case Study 7: Local Administrator Group Exposure
+Scenario Description
+
+A workstation where multiple standard users are added to the local Administrators group.
+
+System Conditions
+
+Three non-admin users added to Administrators group
+All other security settings enabled
+
+Expected Results
+
+Administrators group membership flagged
+Clear listing of elevated accounts
+Severity classified appropriately
+No unrelated findings generated
+
+Validation Purpose
+
+Validates group membership enumeration
+Confirms least-privilege detection
+Ensures accurate evidence reporting
+
+Case Study 8: BitLocker Partial Deployment
+Scenario Description
+
+A system where BitLocker is enabled only on the OS drive but not on secondary drives.
+
+System Conditions
+
+OS drive encrypted
+Secondary data drive unencrypted
+All other controls enabled
+
+Expected Results
+
+High severity finding for unencrypted drive
+Clear identification of affected volume
+No misreporting of encrypted drive
+Accurate remediation guidance
+
+Validation Purpose
+
+Validates drive-level encryption detection
+Confirms accurate evidence capture
+Prevents binary-only (enabled/disabled) assumptions
+
+Case Study 9: UAC Disabled Risk Scenario
+Scenario Description
+
+A system configured with User Account Control disabled.
+
+System Conditions
+
+UAC disabled
+All other protections enabled
+
+Expected Results
+
+Medium severity finding for UAC disabled
+Accurate registry or policy evidence displayed
+Clear remediation instructions
+No inflated severity level
+
+Validation Purpose
+
+Validates registry-based configuration checks
+Ensures proper severity mapping
+Confirms rule engine logic
+
+Case Study 10: High-Risk Misconfiguration Cluster
+Scenario Description
+
+A severely misconfigured system representing unmanaged home-use conditions.
+
+System Conditions
+
+Antivirus disabled
+Firewall disabled
+SMBv1 enabled
+BitLocker disabled
+Guest account enabled
+UAC disabled
+RDP enabled
+
+Expected Results
+
+Multiple Critical findings
+Multiple High findings
+Medium findings correctly categorized
+UI correctly filters Critical items
+HTML report structured clearly despite high volume
+
+Validation Purpose
+
+Stress-tests detection logic
+Validates UI scalability
+Confirms accurate severity aggregation
+
+Case Study 11: Deterministic Scan Repetition
+Scenario Description
+
+Multiple scans executed consecutively on an unchanged system.
+
+System Conditions
+
+No configuration changes between scans
+
+Expected Results
+
+Identical findings across all scans
+Consistent severity counts
+No duplicate UI entries
+Stable HTML report generation
+
+Validation Purpose
+
+Validates deterministic behavior
+Confirms scan repeatability
+Ensures consistent JSON parsing
+
+Case Study 12: JSON Structural Variation
+Scenario Description
+
+Python scanner returns valid JSON with reordered keys and additional metadata fields.
+
+System Conditions
+
+Field order altered
+Non-security metadata added
+
+Expected Results
+
+C++ parser processes JSON successfully
+All findings displayed correctly
+No parsing failures
+No missing severity data
+
+Validation Purpose
+
+Validates resilient JSON parsing
+Prevents brittle integration dependencies
+Confirms schema flexibility
+
+Case Study 13: Permission-Restricted PowerShell Execution
+Scenario Description
+
+PowerShell execution policy or permissions limit access to certain queries.
+
+System Conditions
+
+Restricted access to specific registry or policy queries
+Non-admin execution context
+
+Expected Results
+
+Scan completes without crash
+Warnings logged for inaccessible checks
+Partial results displayed
+HTML report notes limited visibility
+
+Validation Purpose
+
+Confirms graceful error handling
+Validates defensive coding design
+Ensures professional reliability
+
+Case Study 14: Empty Findings Validation
+Scenario Description
+
+System fully hardened with no detectable misconfigurations.
+
+System Conditions
+
+All security controls enabled and compliant
+
+Expected Results
+
+Zero Critical/High/Medium findings
+Low or informational entries only
+Clean UI summary
+Professional “No significant vulnerabilities detected” message in HTML report
+
+Validation Purpose
+
+Confirms absence of false positives
+Builds trust in tool accuracy
+Validates baseline integrity
+
+Case Study 15: SQLite Scan History Validation
+Scenario Description
+
+Scan history feature enabled and multiple scans stored locally.
+
+System Conditions
+
+Three separate scans executed and saved
+Database retrieval enabled
+
+Expected Results
+
+Each scan stored with accurate timestamp
+Historical scans retrievable
+No data corruption
+Severity summaries preserved correctly
+
+Validation Purpose
+
+Validates persistence layer integrity
+Confirms proper database integration
+Ensures long-term usability of application
