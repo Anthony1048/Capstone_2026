@@ -1,0 +1,331 @@
+Windows Vulnerability & Hardening Auditor
+Technical Implementation Documentation (Current State)
+1. Project Overview
+1.1 System Description
+
+The Windows Vulnerability & Hardening Auditor is a defensive cybersecurity application that analyzes the security configuration of a local Windows system.
+
+The application currently operates as a read-only auditing tool that inspects specific Windows security settings, evaluates them against predefined rules, and reports any detected misconfigurations along with severity classifications and remediation guidance.
+
+The system does not modify system configurations and does not perform any exploitation. All operations are limited to safe retrieval and evaluation of configuration data.
+
+The system is designed with extensibility in mind, allowing additional security checks to be integrated with minimal changes to the overall architecture.
+
+The application is implemented using a multi-language architecture consisting of:
+
+A C++ application (user interface and orchestration)
+A Python-based scanning engine (security checks and rule evaluation)
+PowerShell commands (data retrieval layer)
+2. Current System Architecture
+
+The system is implemented as a layered architecture, where each component has a clearly defined responsibility.
+
+2.1 Technology Stack
+Technology	Current Role
+C++	Application control, UI handling, scan orchestration, JSON parsing, report generation
+Python	Execution of security checks and rule evaluation
+PowerShell	Retrieval of Windows configuration data
+JSON	Data exchange format between Python and C++
+HTML/CSS	Report generation and formatting
+SQLite (Optional)	Not currently active in core workflow (reserved for future use)
+3. Current System Workflow
+
+The system follows a deterministic execution flow, where each step directly triggers the next.
+
+Step 1 – Application Launch
+
+The user launches the C++ application.
+The application initializes:
+
+User interface
+Scan controls
+Runtime environment
+Step 2 – User Initiates Scan
+
+The user selects the scan option in the interface.
+This action triggers the C++ application to:
+
+Prepare the scan process
+Spawn a Python process to execute the scanner
+Step 3 – Python Scanner Execution
+
+The Python scanner begins execution immediately after being launched by C++.
+A sequence of predefined security checks is executed in order.
+
+For each check:
+
+A PowerShell command is executed
+The system configuration result is captured
+The output is structured and prepared for evaluation
+Step 4 – Security Rule Evaluation
+
+Each collected result is evaluated against hardcoded security rules in the Python scanner.
+
+The scanner determines:
+
+Whether the configuration is secure or insecure
+The associated severity level
+Step 5 – JSON Result Construction
+
+After all checks complete, the Python scanner constructs a JSON object.
+
+Each finding includes:
+
+Finding ID
+Severity
+Description
+Evidence (raw or interpreted output)
+Recommended remediation
+
+The JSON output is written and returned to the C++ application.
+
+Step 6 – Result Processing (C++)
+
+The C++ application reads and parses the JSON output.
+
+Parsed data is used to:
+
+Populate the UI with findings
+Group findings by severity
+Calculate summary statistics
+Step 7 – Report Generation
+
+The C++ application generates an HTML report using the parsed results.
+The report is saved locally and reflects the completed scan.
+
+4. Implemented Security Checks (Current)
+
+The following checks are actively implemented and executed by the Python scanner.
+
+4.1 Windows Defender Status
+
+PowerShell Command:
+
+Get-MpComputerStatus | Select-Object AMServiceEnabled
+
+Evaluation Logic:
+
+Enabled → Secure
+Disabled → High Severity
+4.2 Windows Firewall Status
+
+PowerShell Command:
+
+Get-NetFirewallProfile
+
+Evaluation Logic:
+
+All profiles enabled → Secure
+Any profile disabled → Critical Severity
+4.3 SMBv1 Protocol
+
+PowerShell Command:
+
+Get-WindowsOptionalFeature -Online -FeatureName SMB1Protocol
+
+Evaluation Logic:
+
+Disabled → Secure
+Enabled → High Severity
+4.4 Remote Desktop (RDP)
+
+PowerShell Command:
+
+Get-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server"
+
+Evaluation Logic:
+
+Disabled → Secure
+Enabled → Medium Severity
+4.5 BitLocker Encryption
+
+PowerShell Command:
+
+Get-BitLockerVolume
+
+Evaluation Logic:
+
+Enabled → Secure
+Disabled → High Severity
+4.6 User Account Control (UAC)
+
+PowerShell Command:
+
+Get-ItemProperty -Path HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System
+
+Evaluation Logic:
+
+Enabled → Secure
+Disabled → High Severity
+4.7 User Account Check
+
+PowerShell Command:
+
+Get-LocalUser -Name Guest
+
+Evaluation Logic:
+
+Disabled → Secure
+Enabled → Medium Severity
+
+This check evaluates the status of built-in user accounts, including the Guest account.
+
+4.8 Local Administrators Group
+
+PowerShell Command:
+
+Get-LocalGroupMember -Group Administrators
+
+Evaluation Logic:
+
+Output is reviewed for:
+Unexpected accounts
+Excessive privilege assignments
+Severity is assigned dynamically based on findings
+4.9 Remote Access Configuration
+
+PowerShell Command:
+
+.\rremote_enabled.ps1
+
+Evaluation Logic:
+
+Remote access enabled → Medium Severity
+Remote access disabled → Secure
+5. Result Visualization (Current Implementation)
+
+The C++ application displays scan results in a structured interface.
+
+Current capabilities:
+
+Tabular display of findings
+Severity classification per finding
+Description and remediation guidance
+Filtering by severity level
+6. HTML Report Output
+
+The system generates a static HTML report after each scan.
+
+The report currently includes:
+
+Scan summary
+Severity breakdown
+Detailed findings
+Evidence for each finding
+Recommended remediation steps
+7. System Components (Current Responsibilities)
+7.1 C++ Application
+Controls scan lifecycle
+Launches Python scanner
+Parses JSON results
+Displays findings
+Generates HTML reports
+7.2 Python Scanner
+Executes all security checks
+Runs PowerShell commands
+Evaluates results against rules
+Constructs JSON output
+7.3 PowerShell Layer
+Retrieves system configuration data
+Executes read-only commands only
+Returns structured JSON-formatted output representing system state information
+8. Security and Ethical Constraints (Enforced)
+
+The system currently enforces the following constraints:
+
+All checks are read-only
+No automatic remediation is performed
+No sensitive user data is stored
+Execution is intended for authorized systems only
+9. Current Testing Status
+
+Testing is focused on validating implemented functionality, not planned features.
+
+Validated areas include:
+
+Accurate detection of configuration states
+Correct severity classification
+Successful Python → JSON → C++ data flow
+Proper handling of permission-related failures
+Successful HTML report generation
+
+A set of 10–15 test cases is currently used to validate behavior.
+
+10. Current Completion Status
+
+The system currently:
+
+Executes a full scan from UI → Python → PowerShell → JSON → UI
+Detects multiple Windows security misconfigurations
+Classifies findings by severity
+Displays results in the interface
+Generates a complete HTML report
+11. Error Handling
+
+The system includes structured error handling across all layers to ensure stability during scan execution.
+
+PowerShell Layer:
+
+Errors are captured using PowerShell error handling mechanisms
+Scripts are configured to stop execution on critical failures
+
+Python Scanner:
+
+Wraps PowerShell execution in try/catch blocks
+Captures command execution failures and unexpected output
+Returns error states as part of the JSON response
+
+C++ Application:
+
+Validates JSON input before parsing
+Handles missing or malformed fields gracefully
+Displays error messages in the UI when scan issues occur
+
+All detected errors are included in the scan output to ensure transparency and aid debugging.
+
+12. Prerequisites
+
+The following requirements must be met for proper system operation:
+
+Administrative privileges are required to execute most PowerShell security checks
+The application (CLion or compiled executable) must be run as Administrator
+Windows PowerShell must be available and enabled
+Python runtime environment must be properly configured
+
+Failure to meet these requirements may result in incomplete or failed scans.
+
+13. File Structure
+
+The project uses a structured directory layout for organizing components:
+
+/powershell/
+- Contains all PowerShell scripts used for system checks
+
+/python/
+- Contains the Python scanning engine
+
+/cpp/
+- Contains the main C++ application
+
+/build (e.g., cmake-build-debug)/
+- PowerShell scripts must currently be accessible from this directory at runtime
+
+Note:
+Due to current implementation constraints, PowerShell scripts are required to reside in or be copied to the build directory for execution.
+
+14. Output Location
+
+Generated scan reports are saved locally upon completion.
+
+Current behavior:
+
+Reports are generated as HTML files
+Default output location is the application runtime directory
+
+Future improvements (in progress):
+
+Integration with final_report enhancements
+Configurable output directory
+Optional screenshot capture of report results
+
+The output location may be updated as report handling features are expanded.
